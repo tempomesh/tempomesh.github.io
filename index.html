@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>8mem | Neural Network Intelligence</title>
+    <meta name="description" content="Experience the infinity of neural capabilities with 8mem." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        /* Using Outfit for the primary logo units as requested - High-end Geometric Sans */
+        .text-group, .logo-mem { 
+            font-family: 'Outfit', sans-serif !important; 
+            letter-spacing: -3px !important;
+            font-weight: 800 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Canvas background for neural nodes -->
+    <div id="neural-bg"></div>
+
+    <div id="grey-overlay"></div>
+    <div id="splash-logo">
+        <svg viewBox="0 0 200 200">
+            <defs>
+                <filter id="splashGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="4" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+                <filter id="splashSpiritGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="2" result="blur1" />
+                    <feGaussianBlur stdDeviation="6" result="blur2" />
+                    <feMerge>
+                        <feMergeNode in="blur2" />
+                        <feMergeNode in="blur1" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
+            <g class="splash-spin-target">
+                <path class="infinity-track"
+                    d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
+                <path class="infinity-trail" pathLength="100" filter="url(#splashGlow)"
+                    d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
+                <circle cx="0" cy="0" r="5" class="spirit" filter="url(#splashSpiritGlow)">
+                    <animateMotion dur="3s" repeatCount="indefinite" calcMode="linear"
+                        path="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
+                </circle>
+            </g>
+        </svg>
+    </div>
+
+    <div id="main-content">
+        <nav class="nav">
+            <div class="brand">
+                <div class="logo-8">
+                    <svg viewBox="0 0 200 200" width="60" height="60"> <!-- Smaller nav logo -->
+                        <defs>
+                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feMerge>
+                                    <feMergeNode in="blur" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                            <filter id="spiritGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur stdDeviation="2" result="blur1" />
+                                <feGaussianBlur stdDeviation="6" result="blur2" />
+                                <feMerge>
+                                    <feMergeNode in="blur2" />
+                                    <feMergeNode in="blur1" />
+                                    <feMergeNode in="SourceGraphic" />
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        <g class="spin-infinity">
+                            <path class="infinity-track"
+                                d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
+                            <path class="infinity-trail" pathLength="100"
+                                d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
+                            <circle cx="0" cy="0" r="5" class="spirit" filter="url(#spiritGlow)">
+                                <animateMotion dur="3s" repeatCount="indefinite" calcMode="linear"
+                                    path="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
+                            </circle>
+                        </g>
+                    </svg>
+                </div>
+                <div class="logo-mem">mem</div>
+            </div>
+            <div class="nav-links">
+                <!-- Links removed as per request -->
+            </div>
+        </nav>
+
+        <main class="hero">
+            <div class="hero-content">
+                <div class="badge">SECURE NEURAL STORAGE</div>
+                <h1 class="headline">Infinite <span class="highlight">Memory</span><br><span class="highlight">for AI Agents</span></h1>
+                <p class="subtitle">8mem provides a visible, editable, and contradiction-aware memory layer. 
+                    Stop treating AI memory like a black box and start building on a foundation of trust.</p>
+
+                <div class="cta-group">
+                    <!-- Replace YOUR_FORM_ID with your Formspree endpoint ID -->
+                    <form action="https://formspree.io/f/xnjgobwk" method="POST" class="waitlist-form">
+                        <div class="input-wrapper">
+                            <input type="email" name="email" placeholder="Enter email for early access" required class="waitlist-input">
+                            <button type="submit" class="cta-primary">Secure Spot</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="glass-orb">
+                    <div class="pulse-ring"></div>
+                    <div class="inner-core"></div>
+                    <!-- Orbiting data particles around the orb -->
+                    <div class="orbiting-particles"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
