@@ -164,7 +164,7 @@ wire_detected_agents() {
     info "Hermes detected."
   fi
 
-  if [ "$OPENCLAW_DETECTED" = "1" ] && confirm_default_yes "Wire 8mem into OpenClaw / Viri now?"; then
+  if [ "$OPENCLAW_DETECTED" = "1" ] && confirm_default_yes "Wire 8mem into your OpenClaw agent now?"; then
     if "$VENV_DIR/bin/8mem" setup --mode openclaw --non-interactive --skip-telegram --skip-llm-check --no-status --no-next-steps; then
       OPENCLAW_WIRED="1"
     else
@@ -175,7 +175,7 @@ wire_detected_agents() {
     fi
   fi
 
-  if [ "$HERMES_DETECTED" = "1" ] && confirm_default_yes "Wire 8mem into Hermes / Govi now?"; then
+  if [ "$HERMES_DETECTED" = "1" ] && confirm_default_yes "Wire 8mem into your Hermes agent now?"; then
     if "$VENV_DIR/bin/8mem" setup --mode hermes --non-interactive --skip-telegram --skip-llm-check --no-status --no-next-steps; then
       HERMES_WIRED="1"
     else
@@ -259,7 +259,7 @@ print_next_steps() {
   if [ "$OPENCLAW_WIRED" = "1" ]; then
     info ""
     info "OpenClaw is wired."
-    info "Test in Viri:"
+    info "Test in your OpenClaw agent:"
     info "  /passport"
     info "  /compare coffee"
     info "  remember I prefer bullet points"
@@ -268,30 +268,30 @@ print_next_steps() {
     info "  8mem uninstall --mode openclaw"
   elif [ "$OPENCLAW_WIRE_FAILED" = "1" ]; then
     info ""
-    info "OpenClaw was detected, but Viri was not wired automatically."
+    info "OpenClaw was detected, but the OpenClaw agent was not wired."
     info "Fix the workspace warning above, then run:"
     info "  8mem setup --mode openclaw"
   elif [ "$OPENCLAW_DETECTED" = "1" ] || { [ "$SETUP_MODE" != "interactive" ] && [ -f "$HOME/.openclaw/openclaw.json" ]; }; then
     info ""
-    info "OpenClaw detected. Wire Viri with:"
+    info "OpenClaw detected. Wire your OpenClaw agent with:"
     info "  8mem setup --mode openclaw"
   fi
   if [ "$HERMES_WIRED" = "1" ]; then
     info ""
     info "Hermes is wired."
-    info "Test in Govi:"
+    info "Test in your Hermes agent:"
     info "  /refresh8mem"
     info "  /passport"
     info "  /corrections"
     info "  /compare coffee"
   elif [ "$HERMES_WIRE_FAILED" = "1" ]; then
     info ""
-    info "Hermes was detected, but Govi was not wired."
+    info "Hermes was detected, but the Hermes agent was not wired."
     info "Fix the warning above, then run:"
     info "  8mem setup --mode hermes"
   elif [ "$HERMES_DETECTED" = "1" ] || { [ "$SETUP_MODE" != "interactive" ] && [ -f "$HOME/.hermes/config.yaml" ]; }; then
     info ""
-    info "Hermes detected. Wire Govi with:"
+    info "Hermes detected. Wire your Hermes agent with:"
     info "  8mem setup --mode hermes"
   fi
   if [ "$OPENCLAW_DETECTED" = "0" ] && [ "$HERMES_DETECTED" = "0" ]; then
