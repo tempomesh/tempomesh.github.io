@@ -258,7 +258,7 @@ print_next_steps() {
   fi
   if [ "$OPENCLAW_WIRED" = "1" ]; then
     info ""
-    info "OpenClaw was wired automatically."
+    info "OpenClaw is wired."
     info "Test in Viri:"
     info "  /passport"
     info "  /compare coffee"
