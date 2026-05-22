@@ -12,14 +12,18 @@ set -euo pipefail
 
 APP_NAME="8mem"
 WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.0-py3-none-any.whl}"
-WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-c871935b560ae7d5391855aecfcfc230826efb11fc25476b9b5dea5869c3b070}"
+WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-8bd578ea05368ec591f2855790f8b43c5a049d2c6340b14e0d7861217dc6fa0c}"
 RUNTIME_HOME="${EIGHTMEM_HOME:-$HOME/.8mem}"
 VENV_DIR="${EIGHTMEM_VENV:-$HOME/.8mem/venv}"
 BIN_DIR="${EIGHTMEM_BIN_DIR:-$HOME/.local/bin}"
 RUN_SETUP="${EIGHTMEM_RUN_SETUP:-1}"
 SETUP_MODE="skipped"
+OPENCLAW_DETECTED="0"
 OPENCLAW_WIRED="0"
 OPENCLAW_WIRE_FAILED="0"
+HERMES_DETECTED="0"
+HERMES_WIRED="0"
+HERMES_WIRE_FAILED="0"
 TELEGRAM_CONFIGURED="0"
 
 info() {
@@ -118,6 +122,71 @@ has_interactive_tty() {
   [ -r /dev/tty ] && [ -w /dev/tty ] && { : < /dev/tty; } 2>/dev/null
 }
 
+confirm_default_yes() {
+  local prompt="$1"
+  local answer
+
+  printf '%s' "$prompt [Y/n] " > /dev/tty
+  IFS= read -r answer < /dev/tty || answer=""
+  case "${answer:-}" in
+    ""|y|Y|yes|YES|Yes)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+detect_agents() {
+  if [ -f "$HOME/.openclaw/openclaw.json" ]; then
+    OPENCLAW_DETECTED="1"
+  fi
+  if [ -f "$HOME/.hermes/config.yaml" ]; then
+    HERMES_DETECTED="1"
+  fi
+}
+
+wire_detected_agents() {
+  detect_agents
+  if [ "$OPENCLAW_DETECTED" = "0" ] && [ "$HERMES_DETECTED" = "0" ]; then
+    info ""
+    info "OpenClaw and Hermes not detected. 8mem will run as a standalone memory bot if Telegram was configured."
+    return
+  fi
+
+  info ""
+  if [ "$OPENCLAW_DETECTED" = "1" ] && [ "$HERMES_DETECTED" = "1" ]; then
+    info "OpenClaw and Hermes detected."
+  elif [ "$OPENCLAW_DETECTED" = "1" ]; then
+    info "OpenClaw detected."
+  else
+    info "Hermes detected."
+  fi
+
+  if [ "$OPENCLAW_DETECTED" = "1" ] && confirm_default_yes "Wire 8mem into OpenClaw / Viri now?"; then
+    if "$VENV_DIR/bin/8mem" setup --mode openclaw --non-interactive --skip-telegram --skip-llm-check --no-status --no-next-steps; then
+      OPENCLAW_WIRED="1"
+    else
+      OPENCLAW_WIRE_FAILED="1"
+      info "OpenClaw wiring was skipped because setup could not safely update the workspace."
+      info "Run this after fixing the OpenClaw workspace issue:"
+      info "  8mem setup --mode openclaw"
+    fi
+  fi
+
+  if [ "$HERMES_DETECTED" = "1" ] && confirm_default_yes "Wire 8mem into Hermes / Govi now?"; then
+    if "$VENV_DIR/bin/8mem" setup --mode hermes --non-interactive --skip-telegram --skip-llm-check --no-status --no-next-steps; then
+      HERMES_WIRED="1"
+    else
+      HERMES_WIRE_FAILED="1"
+      info "Hermes wiring was skipped because setup could not safely update Hermes."
+      info "Run this after fixing the Hermes warning:"
+      info "  8mem setup --mode hermes"
+    fi
+  fi
+}
+
 run_setup() {
   if [ "$RUN_SETUP" != "1" ]; then
     info "Skipping setup because EIGHTMEM_RUN_SETUP=$RUN_SETUP"
@@ -130,25 +199,12 @@ run_setup() {
   if has_interactive_tty; then
     SETUP_MODE="interactive"
     "$VENV_DIR/bin/8mem" setup --mode both --skip-llm-check --no-next-steps < /dev/tty
-    if [ -f "$HOME/.openclaw/openclaw.json" ]; then
-      info ""
-      info "OpenClaw detected - wiring Viri automatically."
-      if "$VENV_DIR/bin/8mem" setup --mode openclaw --non-interactive --skip-telegram --skip-llm-check --no-status --no-next-steps; then
-        OPENCLAW_WIRED="1"
-      else
-        OPENCLAW_WIRE_FAILED="1"
-        info "OpenClaw wiring was skipped because setup could not safely update the workspace."
-        info "Run this after fixing the OpenClaw workspace issue:"
-        info "  8mem setup --mode openclaw"
-      fi
-    else
-      info ""
-      info "OpenClaw not detected. 8mem will run as a standalone memory bot if Telegram was configured."
-    fi
+    wire_detected_agents
   else
     SETUP_MODE="non_interactive"
     info "No interactive terminal detected; running safe non-interactive setup."
     "$VENV_DIR/bin/8mem" setup --non-interactive --skip-telegram --skip-llm-check --no-next-steps
+    detect_agents
   fi
   if [ -f "$RUNTIME_HOME/.env" ] && grep -q '^TELEGRAM_BOT_TOKEN=' "$RUNTIME_HOME/.env"; then
     TELEGRAM_CONFIGURED="1"
@@ -215,11 +271,30 @@ print_next_steps() {
     info "OpenClaw was detected, but Viri was not wired automatically."
     info "Fix the workspace warning above, then run:"
     info "  8mem setup --mode openclaw"
-  elif [ "$SETUP_MODE" != "interactive" ] && [ -f "$HOME/.openclaw/openclaw.json" ]; then
+  elif [ "$OPENCLAW_DETECTED" = "1" ] || { [ "$SETUP_MODE" != "interactive" ] && [ -f "$HOME/.openclaw/openclaw.json" ]; }; then
     info ""
     info "OpenClaw detected. Wire Viri with:"
     info "  8mem setup --mode openclaw"
-  else
+  fi
+  if [ "$HERMES_WIRED" = "1" ]; then
+    info ""
+    info "Hermes is wired."
+    info "Test in Govi:"
+    info "  /refresh8mem"
+    info "  /passport"
+    info "  /corrections"
+    info "  /compare coffee"
+  elif [ "$HERMES_WIRE_FAILED" = "1" ]; then
+    info ""
+    info "Hermes was detected, but Govi was not wired."
+    info "Fix the warning above, then run:"
+    info "  8mem setup --mode hermes"
+  elif [ "$HERMES_DETECTED" = "1" ] || { [ "$SETUP_MODE" != "interactive" ] && [ -f "$HOME/.hermes/config.yaml" ]; }; then
+    info ""
+    info "Hermes detected. Wire Govi with:"
+    info "  8mem setup --mode hermes"
+  fi
+  if [ "$OPENCLAW_DETECTED" = "0" ] && [ "$HERMES_DETECTED" = "0" ]; then
     info ""
     if [ "$TELEGRAM_CONFIGURED" = "1" ]; then
       info "Your standalone memory bot is configured."
@@ -228,7 +303,7 @@ print_next_steps() {
       info "  /compare productivity"
       info "  remember I prefer short answers"
     else
-      info "OpenClaw not detected. 8mem is installed as a local memory server."
+      info "OpenClaw and Hermes not detected. 8mem is installed as a local memory server."
     fi
   fi
 }
