@@ -12,7 +12,7 @@ set -euo pipefail
 
 APP_NAME="8mem"
 WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.0-py3-none-any.whl}"
-WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-5a676cdc423e2f25dc15e62324ba98f377e50f4c164933c4ac6ca8269a97c76e}"
+WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-564bfdf924d5d4896290ff7523a1786b8a746c220a7b7ddb2b4373109bccc079}"
 RUNTIME_HOME="${EIGHTMEM_HOME:-$HOME/.8mem}"
 VENV_DIR="${EIGHTMEM_VENV:-$HOME/.8mem/venv}"
 BIN_DIR="${EIGHTMEM_BIN_DIR:-$HOME/.local/bin}"
@@ -25,6 +25,8 @@ HERMES_DETECTED="0"
 HERMES_WIRED="0"
 HERMES_WIRE_FAILED="0"
 TELEGRAM_CONFIGURED="0"
+SERVER_STARTED="0"
+SERVER_START_FAILED="0"
 
 info() {
   printf '%s\n' "$*"
@@ -217,6 +219,19 @@ run_doctor() {
   "$VENV_DIR/bin/8mem" doctor || true
 }
 
+start_server() {
+  info ""
+  info "Starting local 8mem server."
+  if "$VENV_DIR/bin/8mem" start; then
+    SERVER_STARTED="1"
+  else
+    SERVER_START_FAILED="1"
+    info "8mem was installed, but the server did not start automatically."
+    info "Run this after resolving the warning above:"
+    info "  8mem start"
+  fi
+}
+
 print_next_steps() {
   info ""
   info "8mem installed."
@@ -247,6 +262,15 @@ print_next_steps() {
   info ""
   info "Then open:"
   info "  http://127.0.0.1:8787"
+  if [ "$SERVER_STARTED" = "1" ]; then
+    info ""
+    info "8mem server is already running in the background."
+  elif [ "$SERVER_START_FAILED" = "1" ]; then
+    info ""
+    info "8mem server is not running yet because automatic start failed."
+    info "After fixing the warning above, run:"
+    info "  8mem start"
+  fi
   info ""
   info "If Ollama is not installed yet:"
   info "  curl -fsSL https://ollama.com/install.sh | sh"
@@ -319,6 +343,7 @@ main() {
   install_8mem
   install_command_shim
   run_setup
+  start_server
   run_doctor
   print_next_steps
 }
