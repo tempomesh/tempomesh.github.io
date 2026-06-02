@@ -11,8 +11,8 @@ fi
 set -euo pipefail
 
 APP_NAME="8mem"
-WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.4-py3-none-any.whl}"
-WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-240757031478500909edfdf86cbe734e5d7d4a5ee520e9c4fc0e31d7b0cd79f3}"
+WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.5-py3-none-any.whl}"
+WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-7e5c175cdf420d33c2afabd7663c32c2eb3fb8679e309ab789a8e7bdfb178f65}"
 RUNTIME_HOME="${EIGHTMEM_HOME:-$HOME/.8mem}"
 VENV_DIR="${EIGHTMEM_VENV:-$HOME/.8mem/venv}"
 BIN_DIR="${EIGHTMEM_BIN_DIR:-$HOME/.local/bin}"
