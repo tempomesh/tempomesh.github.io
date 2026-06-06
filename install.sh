@@ -11,8 +11,8 @@ fi
 set -euo pipefail
 
 APP_NAME="8mem"
-WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.7-py3-none-any.whl}"
-WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-dbd2afa314461cf5009229ae3b8c42e101b27ee01e78ce630ed907f330b415c8}"
+WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.8-py3-none-any.whl}"
+WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-d52b6a2fc0b0800474c43d4392d8847667d2dc9199ff3a5eb85ac906cde69d20}"
 RUNTIME_HOME="${EIGHTMEM_HOME:-$HOME/.8mem}"
 VENV_DIR="${EIGHTMEM_VENV:-$HOME/.8mem/venv}"
 BIN_DIR="${EIGHTMEM_BIN_DIR:-$HOME/.local/bin}"
@@ -72,6 +72,15 @@ check_optional_ollama() {
     info "Install later with:"
     info "  curl -fsSL https://ollama.com/install.sh | sh"
   fi
+}
+
+runtime_env_value() {
+  local key="$1"
+  local env_file="$RUNTIME_HOME/.env"
+  if [ ! -f "$env_file" ]; then
+    return 1
+  fi
+  grep -E "^${key}=" "$env_file" | tail -1 | sed -E 's/^[^=]+=//; s/^"//; s/"$//'
 }
 
 create_venv() {
@@ -200,8 +209,10 @@ run_setup() {
   info "Running first-time setup."
   if has_interactive_tty; then
     SETUP_MODE="interactive"
-    "$VENV_DIR/bin/8mem" setup --mode both --skip-llm-check --no-next-steps < /dev/tty
-    wire_detected_agents
+    info "8mem setup will ask how you want to use it first: Browser UI, Telegram, both, OpenClaw, or Hermes."
+    info "If you use Ollama, choose a model that is already pulled on this machine."
+    "$VENV_DIR/bin/8mem" setup < /dev/tty
+    detect_agents
   else
     SETUP_MODE="non_interactive"
     info "No interactive terminal detected; running safe non-interactive setup."
@@ -262,6 +273,46 @@ print_next_steps() {
   info ""
   info "Then open:"
   info "  http://127.0.0.1:8787"
+  info ""
+  info "Readiness summary:"
+  if [ "$SERVER_STARTED" = "1" ]; then
+    info "  Ready now: Browser UI and local memory dashboard."
+    info "  Try this first: open Start Here, type one memory, click 'Remember this', then check What AI Knows."
+  else
+    info "  Not running yet: Browser UI. Fix: run 8mem start."
+  fi
+  local_model="$(runtime_env_value DEFAULT_LLM_FALLBACK_MODEL || true)"
+  if [ -n "${local_model:-}" ]; then
+    info "  Local model configured: $local_model"
+    if has_command ollama; then
+      info "  If Memory Test fails, run: ollama pull $local_model"
+    else
+      info "  Local model replies need Ollama. Install Ollama, then run: ollama pull $local_model"
+    fi
+  else
+    info "  Local model not selected yet. Fix: run 8mem setup."
+  fi
+  telegram_token="$(runtime_env_value TELEGRAM_BOT_TOKEN || true)"
+  telegram_url="$(runtime_env_value TELEGRAM_FORWARD_URL || true)"
+  if [ -n "${telegram_token:-}" ] && [ -n "${telegram_url:-}" ]; then
+    info "  Telegram configured: token and public HTTPS URL are saved."
+  elif [ -n "${telegram_token:-}" ]; then
+    info "  Telegram incomplete: token saved, but no public HTTPS URL/webhook yet."
+    info "  Fix: start an HTTPS tunnel, then run 8mem setup --mode telegram."
+  else
+    info "  Telegram not configured yet."
+    info "  Fix: create a BotFather token and public HTTPS URL, then run 8mem setup --mode telegram."
+  fi
+  if [ "$OPENCLAW_DETECTED" = "1" ]; then
+    info "  OpenClaw detected. Connect/reconnect with: 8mem setup --mode openclaw"
+  else
+    info "  OpenClaw not detected. If installed later, run: 8mem setup --mode openclaw"
+  fi
+  if [ "$HERMES_DETECTED" = "1" ]; then
+    info "  Hermes detected. Connect/reconnect with: 8mem setup --mode hermes"
+  else
+    info "  Hermes not detected. If installed later, run: 8mem setup --mode hermes"
+  fi
   if [ "$SERVER_STARTED" = "1" ]; then
     info ""
     info "8mem server is already running in the background."
@@ -274,7 +325,7 @@ print_next_steps() {
   info ""
   info "If Ollama is not installed yet:"
   info "  curl -fsSL https://ollama.com/install.sh | sh"
-  info "  ollama pull qwen2.5:14b"
+  info "  ollama pull ${local_model:-qwen3:1.7b}"
   info ""
   if [ "$TELEGRAM_CONFIGURED" != "1" ]; then
     info "For Telegram, rerun setup when you have your BotFather token:"
