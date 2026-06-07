@@ -9,8 +9,8 @@
   <meta property="og:description" content="Visible, correctable, portable, shared memory for AI agents." />
   <meta property="og:url" content="https://8mem.com" />
   <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="/favicon.png" type="image/png" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="icon" href="/favicon.png?v=2" type="image/png" />
+  <link rel="apple-touch-icon" href="/favicon.png?v=2" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -125,15 +125,15 @@
 
     .nav-cta {
       font-size: 12px;
-      background: rgba(0,212,255,0.1);
-      color: var(--cyan);
-      border: 0.5px solid rgba(0,212,255,0.35);
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      color: #fff;
+      border: 0;
       border-radius: 6px;
       padding: 7px 16px;
       text-decoration: none;
-      transition: background .2s;
+      transition: opacity .2s, transform .2s;
     }
-    .nav-cta:hover { background: rgba(0,212,255,0.18); }
+    .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
 
     /* ── SECTIONS BASE ── */
     section {
@@ -766,7 +766,7 @@
     .email-form button {
       border: 0;
       border-radius: 10px;
-      background: linear-gradient(135deg, #ff4d4d, #b91c1c);
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
       color: #fff;
       font: inherit;
       font-weight: 700;
@@ -781,7 +781,13 @@
       color: var(--text3) !important;
     }
 
-    .email-note a { color: var(--cyan); }
+    .email-status {
+      min-height: 18px;
+      margin-top: 14px !important;
+      margin-bottom: 0 !important;
+      font-size: 11px !important;
+      color: #73f3c8 !important;
+    }
 
     /* ── FOOTER ── */
     footer {
@@ -899,7 +905,7 @@
 <!-- ══ NAV ══ -->
 <nav>
   <a href="/" class="nav-logo">
-    <img src="logo.svg" alt="8mem" />
+    <img src="logo.svg?v=2" alt="8mem" />
     <span class="nav-logo-badge">agent memory</span>
   </a>
   <ul class="nav-links">
@@ -1290,14 +1296,18 @@
 <section id="stay-connected">
   <div class="container">
     <div class="email-card">
-      <p class="sec-label" style="justify-content:center;margin-bottom:14px;">Stay connected</p>
-      <h2>Follow the 8mem launch.</h2>
-      <p>Get product updates, integration notes, and setup fixes. No spam, just the important 8mem releases.</p>
-      <form class="email-form" action="mailto:hello@8mem.com" method="post" enctype="text/plain">
+      <p class="sec-label" style="justify-content:center;margin-bottom:14px;">Product updates</p>
+      <h2>Get 8mem updates.</h2>
+      <p>Product updates, setup fixes, and new agent integrations. No spam.</p>
+      <form class="email-form" action="https://formsubmit.co/ajax/testmemory.2025@gmail.com" method="post">
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
-        <button type="submit">Stay connected →</button>
+        <input type="hidden" name="_subject" value="New 8mem update signup" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
+        <button type="submit">Get updates →</button>
       </form>
-      <p class="email-note">Until the mailing backend is connected, this opens your email client to <a href="mailto:hello@8mem.com">hello@8mem.com</a>.</p>
+      <p class="email-status" id="email-status" aria-live="polite"></p>
     </div>
   </div>
 </section>
@@ -1306,7 +1316,7 @@
 <!-- ══ FOOTER ══ -->
 <footer>
   <a href="/" class="footer-logo">
-    <img src="logo.svg" alt="8mem" style="height:28px;width:auto;image-rendering:pixelated;opacity:0.75;" />
+    <img src="logo.svg?v=2" alt="8mem" style="height:28px;width:auto;image-rendering:pixelated;opacity:0.75;" />
   </a>
   <div class="footer-links">
     <a href="https://github.com/tempomesh/8mem-clean" target="_blank" rel="noopener">GitHub</a>
@@ -1384,6 +1394,36 @@
     nodes = makeNodes(55);
     draw();
     window.addEventListener('resize', () => { resize(); nodes = makeNodes(55); });
+  })();
+
+  // ── EMAIL CAPTURE ──
+  (function() {
+    const form = document.querySelector('.email-form');
+    const status = document.getElementById('email-status');
+    if (!form || !status) return;
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = form.querySelector('button');
+      const original = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Sending...';
+      status.textContent = '';
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        });
+        if (!response.ok) throw new Error('submit_failed');
+        form.reset();
+        status.textContent = 'Added. You will get important 8mem updates only.';
+      } catch {
+        status.textContent = 'Could not submit right now. Please try again.';
+      } finally {
+        button.disabled = false;
+        button.textContent = original;
+      }
+    });
   })();
 
   // ── COPY INSTALL COMMAND ──

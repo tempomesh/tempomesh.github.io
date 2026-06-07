@@ -5,22 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Install 8mem</title>
   <meta name="description" content="Install 8mem: agent memory for browser UI, Telegram, OpenClaw, Hermes, and local AI workflows.">
-  <link rel="icon" href="/favicon.png" type="image/png">
-  <link rel="apple-touch-icon" href="/favicon.png">
+  <link rel="icon" href="/favicon.png?v=2" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.png?v=2">
   <link rel="stylesheet" href="../../styles.css">
   <style>
     :root{--line:rgba(255,255,255,.16);--gold:#f2c46d;--muted:#b9c5d8}
     body{background:#08080e;color:#edf2ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;line-height:1.6}
     .install-shell,.install-shell *{box-sizing:border-box}
     .install-shell{max-width:1080px;margin:0 auto;padding:34px}
-    .install-brand{display:inline-flex;align-items:center;gap:10px;color:#f8fbff;text-decoration:none;font-size:20px;font-weight:900;margin-bottom:18px}
-    .install-brand img{width:34px;height:34px;image-rendering:pixelated;border-radius:8px}
+    .install-brand{display:inline-flex;align-items:center;gap:12px;color:#f8fbff;text-decoration:none;margin-bottom:18px;padding:10px 14px 10px 10px;border-radius:999px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);transition:transform .2s,border-color .2s}
+    .install-brand:hover{transform:translateY(-1px);border-color:rgba(126,231,255,.34)}
+    .install-brand img{width:92px;height:auto;image-rendering:pixelated}
+    .install-brand .home-dot{width:7px;height:7px;border-radius:999px;background:#46d6a8;box-shadow:0 0 14px rgba(70,214,168,.8)}
+    .install-brand .home-label{font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#cbd7ea}
     .install-hero{display:block;padding:34px;border-radius:28px;background:linear-gradient(135deg,rgba(242,196,109,.12),rgba(70,214,168,.08) 48%,rgba(122,162,255,.08)),rgba(255,255,255,.035);border:1px solid var(--line)}
     .install-hero h1{font-size:46px;line-height:1.02;margin:12px 0 14px;max-width:800px}
     .install-hero p{font-size:18px;line-height:1.55;color:#cbd7ea;max-width:850px}
     .install-hero .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
     .install-hero .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:12px 18px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f8fbff;text-decoration:none;font-weight:800;letter-spacing:.01em}
-    .install-hero .btn.primary{background:#f2c46d;color:#10141c;border-color:#f2c46d}
+    .install-hero .btn.primary{background:linear-gradient(135deg,#00d4ff,#7c4dff);color:#fff;border-color:transparent}
     .install-shell a{color:#7ee7ff;text-decoration-thickness:2px;text-underline-offset:4px}
     .grid{display:grid;grid-template-columns:1fr;gap:22px;align-items:start}
     .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -52,8 +55,9 @@
 <body>
   <main class="install-shell">
     <a class="install-brand" href="/">
-      <img src="/favicon.png" alt="8mem">
-      <span>8mem</span>
+      <img src="/logo.svg?v=2" alt="8mem">
+      <span class="home-dot" aria-hidden="true"></span>
+      <span class="home-label">home</span>
     </a>
     <section class="install-hero">
       <div class="badge green">Open source</div>
