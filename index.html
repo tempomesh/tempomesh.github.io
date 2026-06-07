@@ -1,136 +1,1297 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>8mem | Neural Network Intelligence</title>
-    <meta name="description" content="Experience the infinity of neural capabilities with 8mem." />
-    <link rel="icon" type="image/png" href="favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css" />
-    <style>
-        /* Using Outfit for the primary logo units as requested - High-end Geometric Sans */
-        .text-group, .logo-mem { 
-            font-family: 'Outfit', sans-serif !important; 
-            letter-spacing: -3px !important;
-            font-weight: 800 !important;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8mem — Agent memory your AI can finally keep</title>
+  <meta name="description" content="Agent memory your AI can finally keep. Visible. Correctable. Portable. Shared." />
+  <meta property="og:title" content="8mem — Agent memory your AI can finally keep" />
+  <meta property="og:description" content="Visible, correctable, portable, shared memory for AI agents." />
+  <meta property="og:url" content="https://8mem.com" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #08080e;
+      --bg2:      #0e0e18;
+      --bg3:      #13131f;
+      --border:   rgba(255,255,255,0.07);
+      --cyan:     #00d4ff;
+      --purple:   #7c3aed;
+      --purple2:  #a78bfa;
+      --text:     #e2e0f0;
+      --text2:    #8b8a9e;
+      --text3:    #444460;
+      --dark:     #7A4208;
+      --arm:      #C8780E;
+      --armdark:  #7A4208;
+      --sucker:   #C8A050;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── CANVAS BACKGROUND ── */
+    #constellation {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,8,14,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid var(--border);
+      padding: 0 32px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 38px;
+      width: auto;
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+
+    .nav-logo-badge {
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: rgba(0,212,255,0.08);
+      border: 0.5px solid rgba(0,212,255,0.25);
+      border-radius: 20px;
+      padding: 3px 9px;
+      margin-left: 6px;
+      white-space: nowrap;
+    }
+
+    /* Hero pillar tags line */
+    .hero-pillartags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .hero-pillartags span { color: #c8c6e0; }
+    .hero-pillartags .sep { color: var(--cyan); opacity: 0.5; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 13px;
+      color: var(--text3);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--purple2); }
+
+    .nav-cta {
+      font-size: 12px;
+      background: rgba(0,212,255,0.1);
+      color: var(--cyan);
+      border: 0.5px solid rgba(0,212,255,0.35);
+      border-radius: 6px;
+      padding: 7px 16px;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: rgba(0,212,255,0.18); }
+
+    /* ── SECTIONS BASE ── */
+    section {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: calc(100vh - 58px);
+      display: flex;
+      align-items: center;
+      padding: 60px 0 40px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      border: 0.5px solid rgba(0,212,255,0.3);
+      border-radius: 20px;
+      padding: 4px 14px;
+      background: rgba(0,212,255,0.05);
+      margin-bottom: 22px;
+    }
+
+    .hero-h1 {
+      font-size: 50px;
+      font-weight: 800;
+      line-height: 1.07;
+      letter-spacing: -2px;
+      margin-bottom: 18px;
+    }
+    .hero-h1 .white { color: #fff; }
+    .hero-h1 .grad {
+      background: linear-gradient(90deg, var(--cyan) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 15px;
+      color: var(--text2);
+      line-height: 1.75;
+      max-width: 400px;
+      margin-bottom: 34px;
+    }
+    .hero-sub strong { color: #c8c6e0; font-weight: 500; }
+
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--purple));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 26px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity .2s;
+    }
+    .btn-primary:hover { opacity: .88; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text2);
+      border: 0.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 13px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    /* ── ANIMATED OCTOPUS ── */
+    .octo-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .octo-rings {
+      position: absolute;
+      width: 280px;
+      height: 280px;
+    }
+
+    .octo-glow {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(240,190,40,0.2) 0%, rgba(255,210,80,0.05) 55%, transparent 70%);
+      animation: glowPulse 3.5s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0%,100% { opacity: .6; transform: scale(1); }
+      50%      { opacity: 1;  transform: scale(1.08); }
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 0.5px solid rgba(0,212,255,0.1);
+    }
+    .ring1 { width: 270px; height: 270px; top: 5px; left: 5px; animation: spin 28s linear infinite; }
+    .ring2 { width: 200px; height: 200px; top: 40px; left: 40px; animation: spin 18s linear infinite reverse; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .octo-svg { position: relative; z-index: 2; }
+
+    /* Octopus body float */
+    .octo-body-group { animation: bodyFloat 3.8s ease-in-out infinite; }
+    @keyframes bodyFloat {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* Arm animations — each arm has unique timing */
+    .a-bl2 { animation: waveL 3.2s ease-in-out infinite 0.0s;  transform-box: fill-box; transform-origin: 25% 12%; }
+    .a-bl1 { animation: waveL 2.9s ease-in-out infinite 0.35s; transform-box: fill-box; transform-origin: 33% 8%;  }
+    .a-l   { animation: waveL 3.1s ease-in-out infinite 0.15s; transform-box: fill-box; transform-origin: 42% 6%;  }
+    .a-cl  { animation: waveC 3.0s ease-in-out infinite 0.5s;  transform-box: fill-box; transform-origin: 50% 5%;  }
+    .a-cr  { animation: waveC 3.0s ease-in-out infinite 0.75s; transform-box: fill-box; transform-origin: 50% 5%;  }
+    .a-r   { animation: waveR 3.1s ease-in-out infinite 0.2s;  transform-box: fill-box; transform-origin: 58% 6%;  }
+    .a-br1 { animation: waveR 2.9s ease-in-out infinite 0.4s;  transform-box: fill-box; transform-origin: 67% 8%;  }
+    .a-br2 { animation: waveR 3.2s ease-in-out infinite 0.1s;  transform-box: fill-box; transform-origin: 75% 12%; }
+
+    @keyframes waveL {
+      0%,100% { transform: rotate(0deg); }
+      35%      { transform: rotate(-6deg); }
+      70%      { transform: rotate(3deg); }
+    }
+    @keyframes waveR {
+      0%,100% { transform: rotate(0deg); }
+      35%      { transform: rotate(6deg); }
+      70%      { transform: rotate(-3deg); }
+    }
+    @keyframes waveC {
+      0%,100% { transform: rotate(0deg); }
+      50%      { transform: rotate(-4deg); }
+    }
+
+    /* Eye blink */
+    .eye-l { animation: blink 5s ease-in-out infinite 1.0s; transform-box: fill-box; transform-origin: 50% 50%; }
+    .eye-r { animation: blink 5s ease-in-out infinite 1.5s; transform-box: fill-box; transform-origin: 50% 50%; }
+    @keyframes blink {
+      0%,88%,100% { transform: scaleY(1); }
+      93%          { transform: scaleY(0.08); }
+    }
+
+    /* ── INSTALL BLOCK ── */
+    #install-block {
+      border-top: 0.5px solid var(--border);
+      border-bottom: 0.5px solid var(--border);
+      background: rgba(0,0,0,0.35);
+      padding: 32px 0;
+    }
+
+    .install-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text3);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .code-window {
+      background: rgba(0,0,0,0.55);
+      border: 0.5px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .code-titlebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+    }
+    .dot-r { width: 10px; height: 10px; border-radius: 50%; background: #ff5f57; }
+    .dot-y { width: 10px; height: 10px; border-radius: 50%; background: #febc2e; }
+    .dot-g { width: 10px; height: 10px; border-radius: 50%; background: #28c840; }
+
+    .code-body {
+      padding: 18px 20px;
+      font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.9;
+      position: relative;
+    }
+
+    .code-line { display: flex; align-items: baseline; gap: 10px; }
+    .prompt { color: var(--text3); user-select: none; }
+    .cmd { color: var(--cyan); }
+    .comment { color: #333355; }
+    .out { color: #1D9E75; padding-left: 20px; }
+
+    .copy-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-size: 11px;
+      color: var(--text3);
+      background: rgba(255,255,255,0.04);
+      border: 0.5px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: color .2s, background .2s;
+    }
+    .copy-btn:hover { color: var(--cyan); background: rgba(0,212,255,0.06); }
+
+    /* ── SECTION LABELS ── */
+    .sec-label {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sec-label::before { content: '⟩'; font-size: 12px; }
+
+    .sec-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+
+    .sec-sub {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.7;
+      margin-bottom: 28px;
+      max-width: 520px;
+    }
+
+    /* ── PROBLEM ── */
+    #problem { padding: 72px 0; }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .pcard {
+      background: rgba(255,255,255,0.018);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 20px;
+    }
+    .pcard.bad  { border-left: 2px solid rgba(226,75,74,0.45); }
+    .pcard.good { border-left: 2px solid rgba(0,212,255,0.5); }
+
+    .pcard-label {
+      font-size: 9px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .pcard-label.bad  { color: #f87171; }
+    .pcard-label.good { color: var(--cyan); }
+
+    .convo {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 2.1;
+    }
+    .convo .u  { color: #c8c6e0; }
+    .convo .ai { color: var(--purple2); }
+    .convo .ag { color: var(--cyan); }
+    .convo .d  { color: #222235; }
+
+    /* ── HOW IT WORKS ── */
+    #how { padding: 72px 0; border-top: 0.5px solid var(--border); }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .how-card {
+      background: rgba(255,255,255,0.02);
+      border: 0.5px solid var(--border);
+      border-top: 1.5px solid rgba(0,212,255,0.3);
+      border-radius: 10px;
+      padding: 22px 18px;
+    }
+
+    .how-num {
+      font-size: 10px;
+      letter-spacing: 1.8px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .how-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+
+    .how-body {
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.65;
+    }
+
+    /* ── WHY DIFFERENT ── */
+    #why { padding: 72px 0; border-top: 0.5px solid var(--border); }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .pillar {
+      background: rgba(255,255,255,0.02);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 18px;
+    }
+
+    .pillar-icon {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: var(--purple2);
+    }
+
+    .pillar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .pillar-body {
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.65;
+    }
+
+    /* Engram callout */
+    .engram-box {
+      background: rgba(0,212,255,0.03);
+      border: 0.5px solid rgba(0,212,255,0.18);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+    }
+
+    .engram-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+
+    .engram-text h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #b8b6d0;
+      margin-bottom: 5px;
+    }
+
+    .engram-text p {
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.65;
+    }
+
+    .engram-text code {
+      font-size: 11px;
+      color: var(--cyan);
+      font-family: monospace;
+      background: rgba(0,212,255,0.06);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .etag {
+      display: inline-block;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(0,212,255,0.08);
+      color: var(--cyan);
+      border: 0.5px solid rgba(0,212,255,0.25);
+      border-radius: 4px;
+      padding: 2px 8px;
+      margin-top: 8px;
+    }
+
+    /* ── WORKS WITH ── */
+    #works-with { padding: 56px 0; border-top: 0.5px solid var(--border); }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.025);
+      border: 0.5px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .chip.hl {
+      border-color: rgba(167,139,250,0.35);
+      color: var(--purple2);
+    }
+
+    .chip-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .works-note {
+      font-size: 11px;
+      color: var(--text3);
+      font-style: italic;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    /* ── OPEN SOURCE ── */
+    #open-source { padding: 56px 0; border-top: 0.5px solid var(--border); }
+
+    .oss-box {
+      background: rgba(255,255,255,0.02);
+      border: 0.5px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .oss-left h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.4px;
+      margin-bottom: 8px;
+    }
+
+    .oss-left p {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.7;
+      max-width: 420px;
+    }
+
+    .oss-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .github-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(255,255,255,0.14);
+      border-radius: 8px;
+      padding: 11px 22px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .github-btn:hover { background: rgba(255,255,255,0.09); }
+
+    .gh-icon { width: 18px; height: 18px; fill: var(--text); }
+
+    /* ── CTA SECTION ── */
+    #cta {
+      padding: 80px 0;
+      border-top: 0.5px solid var(--border);
+      text-align: center;
+      background: radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.1) 0%, transparent 55%);
+    }
+
+    .cta-octo {
+      font-size: 52px;
+      display: block;
+      margin-bottom: 18px;
+      animation: bodyFloat 3.8s ease-in-out infinite;
+    }
+
+    .cta-h2 {
+      font-size: 34px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+    }
+
+    .cta-sub {
+      font-size: 14px;
+      color: var(--text3);
+      margin-bottom: 30px;
+    }
+
+    .cta-note {
+      font-size: 11px;
+      color: #222235;
+      margin-top: 14px;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 0.5px solid var(--border);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-size: 12px;
+      color: var(--text3);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links a:hover { color: var(--purple2); }
+
+    .footer-tagline {
+      font-size: 11px;
+      color: #222235;
+    }
+
+    /* ── CAPABILITIES ── */
+    #capabilities { padding: 72px 0; border-top: 0.5px solid var(--border); }
+
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .cap-card {
+      background: rgba(255,255,255,0.02);
+      border: 0.5px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 18px;
+      transition: border-color .2s;
+    }
+    .cap-card:hover { border-color: rgba(0,212,255,0.25); }
+
+    .cap-cmd {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--cyan);
+      background: rgba(0,212,255,0.07);
+      border: 0.5px solid rgba(0,212,255,0.15);
+      border-radius: 5px;
+      padding: 3px 10px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .cap-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .cap-body {
+      font-size: 12px;
+      color: var(--text3);
+      line-height: 1.65;
+    }
+
+    .cap-example {
+      margin-top: 10px;
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 6px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 11px;
+      color: #555570;
+      line-height: 1.7;
+    }
+    .cap-example .cx { color: var(--cyan); }
+    .cap-example .co { color: #1D9E75; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .hero-inner        { grid-template-columns: 1fr; }
+      .octo-stage        { display: none; }
+      .hero-h1           { font-size: 36px; }
+      .problem-grid,
+      .how-grid,
+      .pillars,
+      .cap-grid          { grid-template-columns: 1fr; }
+      .oss-box           { flex-direction: column; }
+      .nav-links         { display: none; }
+      footer             { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
 </head>
-
 <body>
-    <!-- Canvas background for neural nodes -->
-    <div id="neural-bg"></div>
 
-    <div id="grey-overlay"></div>
-    <div id="splash-logo">
-        <svg viewBox="0 0 200 200">
+<!-- Constellation canvas background -->
+<canvas id="constellation"></canvas>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="logo.svg" alt="8mem" />
+    <span class="nav-logo-badge">local-first</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#why">Why 8mem</a></li>
+    <li><a href="https://github.com/tempomesh/8mem-clean" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a href="/app/install/">Install guide</a></li>
+  </ul>
+  <a href="/app/install/" class="nav-cta">Install now →</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <h1 class="hero-h1">
+          <span class="white">Agent memory your AI</span><br>
+          <span class="grad">can finally keep.</span>
+        </h1>
+        <p class="hero-pillartags">
+          <span>Visible</span><span class="sep">·</span>
+          <span>Correctable</span><span class="sep">·</span>
+          <span>Portable</span><span class="sep">·</span>
+          <span>Shared</span>
+        </p>
+        <p class="hero-sub">
+          8mem is a local-first memory layer for AI agents, agent runtimes, and developers.
+          Every AI you connect starts already knowing you — no re-introduction, no black box.
+        </p>
+        <div class="hero-btns">
+          <a href="/app/install/" class="btn-primary">Install now →</a>
+          <a href="#how" class="btn-ghost">See how it works</a>
+        </div>
+
+        <!-- Install block inside hero -->
+        <div style="margin-top:28px;">
+          <p style="font-size:10px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:12px;">Quick install</p>
+          <div class="code-window">
+            <div class="code-titlebar">
+              <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+            </div>
+            <div class="code-body" style="padding:14px 18px;">
+              <button class="copy-btn" onclick="copyInstall(this)">Copy</button>
+              <div class="code-line"><span class="prompt">#</span><span class="comment"> macOS · Linux · Raspberry Pi · WSL2</span></div>
+              <div class="code-line"><span class="prompt">$</span><span class="cmd"> curl -fsSL https://8mem.com/install.sh | bash</span></div>
+              <div class="code-line" style="margin-top:5px"><span class="prompt">$</span><span class="cmd"> 8mem doctor</span><span class="comment">  &amp;&amp; 8mem start</span></div>
+              <div class="code-line" style="margin-top:4px"><span class="out">✓ Open http://127.0.0.1:8787</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Animated octopus -->
+      <div class="octo-stage">
+        <div style="position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;">
+          <div class="octo-glow"></div>
+          <div class="ring ring1"></div>
+          <div class="ring ring2"></div>
+          <svg class="octo-svg" viewBox="0 0 360 370" width="220" height="226" xmlns="http://www.w3.org/2000/svg">
             <defs>
-                <filter id="splashGlow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="4" result="blur" />
-                    <feMerge>
-                        <feMergeNode in="blur" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
-                <filter id="splashSpiritGlow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="2" result="blur1" />
-                    <feGaussianBlur stdDeviation="6" result="blur2" />
-                    <feMerge>
-                        <feMergeNode in="blur2" />
-                        <feMergeNode in="blur1" />
-                        <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                </filter>
+              <radialGradient id="bG" cx="40%" cy="32%" r="68%">
+                <stop offset="0%"   stop-color="#F8D060"/>
+                <stop offset="52%"  stop-color="#E8A020"/>
+                <stop offset="100%" stop-color="#B06810"/>
+              </radialGradient>
+              <radialGradient id="eG" cx="35%" cy="35%" r="65%">
+                <stop offset="0%"   stop-color="#55AAEE"/>
+                <stop offset="100%" stop-color="#2266BB"/>
+              </radialGradient>
             </defs>
-            <g class="splash-spin-target">
-                <path class="infinity-track"
-                    d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
-                <path class="infinity-trail" pathLength="100" filter="url(#splashGlow)"
-                    d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
-                <circle cx="0" cy="0" r="5" class="spirit" filter="url(#splashSpiritGlow)">
-                    <animateMotion dur="3s" repeatCount="indefinite" calcMode="linear"
-                        path="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
-                </circle>
+
+            <g class="octo-body-group">
+
+              <!-- Back arms (behind body) -->
+              <g class="a-bl2">
+                <path d="M148,225 C118,208 80,182 63,156 C53,136 60,112 74,106 C84,100 97,107 100,120"
+                      fill="none" stroke="#B06810" stroke-width="24" stroke-linecap="round"/>
+                <path d="M148,225 C118,208 80,182 63,156 C53,136 60,112 74,106 C84,100 97,107 100,120"
+                      fill="none" stroke="#C8A050" stroke-width="10" stroke-linecap="round" stroke-dasharray="5 7" stroke-dashoffset="2" opacity="0.65"/>
+                <path d="M148,225 C118,208 80,182 63,156 C53,136 60,112 74,106 C84,100 97,107 100,120"
+                      fill="none" stroke="#D08818" stroke-width="16" stroke-linecap="round"/>
+              </g>
+              <g class="a-br2">
+                <path d="M212,225 C242,208 280,182 297,156 C307,136 300,112 286,106 C276,100 263,107 260,120"
+                      fill="none" stroke="#B06810" stroke-width="24" stroke-linecap="round"/>
+                <path d="M212,225 C242,208 280,182 297,156 C307,136 300,112 286,106 C276,100 263,107 260,120"
+                      fill="none" stroke="#C8A050" stroke-width="10" stroke-linecap="round" stroke-dasharray="5 7" stroke-dashoffset="2" opacity="0.65"/>
+                <path d="M212,225 C242,208 280,182 297,156 C307,136 300,112 286,106 C276,100 263,107 260,120"
+                      fill="none" stroke="#D08818" stroke-width="16" stroke-linecap="round"/>
+              </g>
+
+              <!-- Body -->
+              <ellipse cx="180" cy="160" rx="82" ry="76" fill="url(#bG)"/>
+              <ellipse cx="163" cy="136" rx="44" ry="36" fill="#FDE878" opacity="0.3"/>
+              <ellipse cx="180" cy="212" rx="68" ry="28" fill="#8A4A08" opacity="0.45"/>
+              <!-- Spots -->
+              <ellipse cx="148" cy="150" rx="10" ry="7"  fill="#C07820" opacity="0.45"/>
+              <ellipse cx="205" cy="143" rx="13" ry="9"  fill="#C07820" opacity="0.38"/>
+              <ellipse cx="220" cy="173" rx="8"  ry="6"  fill="#C07820" opacity="0.35"/>
+              <ellipse cx="148" cy="183" rx="7"  ry="5"  fill="#C07820" opacity="0.3"/>
+              <ellipse cx="188" cy="193" rx="11" ry="7"  fill="#C07820" opacity="0.28"/>
+
+              <!-- Front arms -->
+              <g class="a-bl1">
+                <path d="M154,234 C127,220 94,200 77,174 C67,155 73,136 86,130 C96,125 108,132 110,145"
+                      fill="none" stroke="#B06810" stroke-width="26" stroke-linecap="round"/>
+                <path d="M154,234 C127,220 94,200 77,174 C67,155 73,136 86,130 C96,125 108,132 110,145"
+                      fill="none" stroke="#C8A050" stroke-width="11" stroke-linecap="round" stroke-dasharray="6 7" stroke-dashoffset="3" opacity="0.7"/>
+                <path d="M154,234 C127,220 94,200 77,174 C67,155 73,136 86,130 C96,125 108,132 110,145"
+                      fill="none" stroke="#E8A020" stroke-width="18" stroke-linecap="round"/>
+              </g>
+              <g class="a-l">
+                <path d="M161,244 C137,265 109,293 96,323 C87,344 92,362 104,368 C114,373 124,363 126,350"
+                      fill="none" stroke="#B06810" stroke-width="26" stroke-linecap="round"/>
+                <path d="M161,244 C137,265 109,293 96,323 C87,344 92,362 104,368 C114,373 124,363 126,350"
+                      fill="none" stroke="#C8A050" stroke-width="11" stroke-linecap="round" stroke-dasharray="6 7" stroke-dashoffset="3" opacity="0.7"/>
+                <path d="M161,244 C137,265 109,293 96,323 C87,344 92,362 104,368 C114,373 124,363 126,350"
+                      fill="none" stroke="#E8A020" stroke-width="18" stroke-linecap="round"/>
+              </g>
+              <g class="a-cl">
+                <path d="M173,250 C161,275 150,306 149,336 C147,356 153,368 165,369 C175,371 184,361 183,348"
+                      fill="none" stroke="#B06810" stroke-width="26" stroke-linecap="round"/>
+                <path d="M173,250 C161,275 150,306 149,336 C147,356 153,368 165,369 C175,371 184,361 183,348"
+                      fill="none" stroke="#C8A050" stroke-width="11" stroke-linecap="round" stroke-dasharray="6 7" stroke-dashoffset="3" opacity="0.7"/>
+                <path d="M173,250 C161,275 150,306 149,336 C147,356 153,368 165,369 C175,371 184,361 183,348"
+                      fill="none" stroke="#E8A020" stroke-width="18" stroke-linecap="round"/>
+              </g>
+              <g class="a-cr">
+                <path d="M187,250 C199,275 210,306 211,336 C213,356 207,368 195,369 C185,371 176,361 177,348"
+                      fill="none" stroke="#B06810" stroke-width="26" stroke-linecap="round"/>
+                <path d="M187,250 C199,275 210,306 211,336 C213,356 207,368 195,369 C185,371 176,361 177,348"
+                      fill="none" stroke="#C8A050" stroke-width="11" stroke-linecap="round" stroke-dasharray="6 7" stroke-dashoffset="3" opacity="0.7"/>
+                <path d="M187,250 C199,275 210,306 211,336 C213,356 207,368 195,369 C185,371 176,361 177,348"
+                      fill="none" stroke="#E8A020" stroke-width="18" stroke-linecap="round"/>
+              </g>
+              <g class="a-r">
+                <path d="M199,244 C223,265 251,293 264,323 C273,344 268,362 256,368 C246,373 236,363 234,350"
+                      fill="none" stroke="#B06810" stroke-width="26" stroke-linecap="round"/>
+                <path d="M199,244 C223,265 251,293 264,323 C273,344 268,362 256,368 C246,373 236,363 234,350"
+                      fill="none" stroke="#C8A050" stroke-width="11" stroke-linecap="round" stroke-dasharray="6 7" stroke-dashoffset="3" opacity="0.7"/>
+                <path d="M199,244 C223,265 251,293 264,323 C273,344 268,362 256,368 C246,373 236,363 234,350"
+                      fill="none" stroke="#E8A020" stroke-width="18" stroke-linecap="round"/>
+              </g>
+              <g class="a-br1">
+                <path d="M206,234 C233,220 266,200 283,174 C293,155 287,136 274,130 C264,125 252,132 250,145"
+                      fill="none" stroke="#B06810" stroke-width="26" stroke-linecap="round"/>
+                <path d="M206,234 C233,220 266,200 283,174 C293,155 287,136 274,130 C264,125 252,132 250,145"
+                      fill="none" stroke="#C8A050" stroke-width="11" stroke-linecap="round" stroke-dasharray="6 7" stroke-dashoffset="3" opacity="0.7"/>
+                <path d="M206,234 C233,220 266,200 283,174 C293,155 287,136 274,130 C264,125 252,132 250,145"
+                      fill="none" stroke="#E8A020" stroke-width="18" stroke-linecap="round"/>
+              </g>
+
+              <!-- Eyes -->
+              <g class="eye-l">
+                <circle cx="157" cy="165" r="26" fill="white"/>
+                <circle cx="157" cy="169" r="18" fill="url(#eG)"/>
+                <circle cx="157" cy="169" r="9"  fill="#001133"/>
+                <circle cx="163" cy="160" r="6"  fill="white"/>
+                <circle cx="151" cy="173" r="2.5" fill="white" opacity="0.55"/>
+              </g>
+              <g class="eye-r">
+                <circle cx="203" cy="165" r="26" fill="white"/>
+                <circle cx="203" cy="169" r="18" fill="url(#eG)"/>
+                <circle cx="203" cy="169" r="9"  fill="#001133"/>
+                <circle cx="209" cy="160" r="6"  fill="white"/>
+                <circle cx="197" cy="173" r="2.5" fill="white" opacity="0.55"/>
+              </g>
+              <circle cx="157" cy="165" r="26" fill="none" stroke="#B06810" stroke-width="1.5"/>
+              <circle cx="203" cy="165" r="26" fill="none" stroke="#B06810" stroke-width="1.5"/>
+
+              <!-- Blush -->
+              <ellipse cx="135" cy="194" rx="16" ry="9" fill="#FF9090" opacity="0.3"/>
+              <ellipse cx="225" cy="194" rx="16" ry="9" fill="#FF9090" opacity="0.3"/>
+
+              <!-- Smile -->
+              <path d="M171,202 Q180,211 189,202" fill="none" stroke="#B06810" stroke-width="2.5" stroke-linecap="round"/>
+
+              <!-- Body outline -->
+              <ellipse cx="180" cy="160" rx="82" ry="76" fill="none" stroke="#B06810" stroke-width="2"/>
+
             </g>
-        </svg>
+          </svg>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div id="main-content">
-        <nav class="nav">
-            <div class="brand">
-                <div class="logo-8">
-                    <svg viewBox="0 0 200 200" width="60" height="60"> <!-- Smaller nav logo -->
-                        <defs>
-                            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="4" result="blur" />
-                                <feMerge>
-                                    <feMergeNode in="blur" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                            <filter id="spiritGlow" x="-50%" y="-50%" width="200%" height="200%">
-                                <feGaussianBlur stdDeviation="2" result="blur1" />
-                                <feGaussianBlur stdDeviation="6" result="blur2" />
-                                <feMerge>
-                                    <feMergeNode in="blur2" />
-                                    <feMergeNode in="blur1" />
-                                    <feMergeNode in="SourceGraphic" />
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        <g class="spin-infinity">
-                            <path class="infinity-track"
-                                d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
-                            <path class="infinity-trail" pathLength="100"
-                                d="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
-                            <circle cx="0" cy="0" r="5" class="spirit" filter="url(#spiritGlow)">
-                                <animateMotion dur="3s" repeatCount="indefinite" calcMode="linear"
-                                    path="M 100 100 C 100 60, 20 60, 20 100 C 20 140, 100 140, 100 100 C 100 60, 180 60, 180 100 C 180 140, 100 140, 100 100 Z" />
-                            </circle>
-                        </g>
-                    </svg>
-                </div>
-                <div class="logo-mem">mem</div>
-            </div>
-            <div class="nav-links">
-                <!-- Links removed as per request -->
-            </div>
-        </nav>
 
-        <main class="hero">
-            <div class="hero-content">
-                <div class="badge">SECURE NEURAL STORAGE</div>
-                <h1 class="headline">Infinite <span class="highlight">Memory</span><br><span class="highlight">for AI Agents</span></h1>
-                <p class="subtitle">8mem provides a visible, editable, and contradiction-aware memory layer. 
-                    Stop treating AI memory like a black box and start building on a foundation of trust.</p>
-
-                <div class="cta-group">
-                    <!-- Replace YOUR_FORM_ID with your Formspree endpoint ID -->
-                    <form action="https://formspree.io/f/xnjgobwk" method="POST" class="waitlist-form">
-                        <div class="input-wrapper">
-                            <input type="email" name="email" placeholder="Enter email for early access" required class="waitlist-input">
-                            <button type="submit" class="cta-primary">Secure Spot</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="hero-visual">
-                <div class="glass-orb">
-                    <div class="pulse-ring"></div>
-                    <div class="inner-core"></div>
-                    <!-- Orbiting data particles around the orb -->
-                    <div class="orbiting-particles"></div>
-                </div>
-            </div>
-        </main>
+<!-- ══ THE PROBLEM ══ -->
+<section id="problem">
+  <div class="container">
+    <p class="sec-label">The problem</p>
+    <div class="problem-grid">
+      <div class="pcard bad">
+        <p class="pcard-label bad">Every AI today — blank every session</p>
+        <div class="convo">
+          <div class="d">Session 1 —</div>
+          <div class="u">You: I'm a founder, early stage, keep replies short.</div>
+          <div class="ai">AI: Got it!</div>
+          <div class="d">Session 2 — new chat —</div>
+          <div class="u">You: I'm a founder, early stage…</div>
+          <div class="ai">AI: Got it!</div>
+          <div class="d">Session 47. Still. Every. Time.</div>
+        </div>
+      </div>
+      <div class="pcard good">
+        <p class="pcard-label good">With 8mem — AI already knows you</p>
+        <div class="convo">
+          <div class="d">Session 1 —</div>
+          <div class="u">You: Founder, early stage, short replies, fundraising this month.</div>
+          <div class="ag">8mem: Saved.</div>
+          <div class="d">Session 2 — fresh chat —</div>
+          <div class="u">You: Help me prep for tomorrow's investor call.</div>
+          <div class="ag">AI: Short format, fundraising context, founder lens — here's your prep.</div>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <script src="script.js"></script>
+<!-- ══ HOW IT WORKS ══ -->
+<section id="how">
+  <div class="container">
+    <p class="sec-label">How it works</p>
+    <h2 class="sec-title">One file. Every AI reads it.</h2>
+    <p class="sec-sub">8mem sits between you and any AI runtime. Each session, before the AI sees your message, it reads your profile. You told it once — it knows forever.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <p class="how-num">01 — Tell</p>
+        <p class="how-title">Say it once, to any AI</p>
+        <p class="how-body">Your preferences, corrections, context. Works through Telegram, browser chat, or the API directly.</p>
+      </div>
+      <div class="how-card">
+        <p class="how-num">02 — Remember</p>
+        <p class="how-title">8mem learns and updates</p>
+        <p class="how-body">Facts are saved, contradictions resolved. Old beliefs archived with a full audit trail — nothing silently overwritten.</p>
+      </div>
+      <div class="how-card">
+        <p class="how-num">03 — Know</p>
+        <p class="how-title">Every AI already knows you</p>
+        <p class="how-body">Any connected runtime gets your full context injected before each session starts. Zero re-introduction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WHY DIFFERENT ══ -->
+<section id="why">
+  <div class="container">
+    <p class="sec-label">Why 8mem is different</p>
+    <h2 class="sec-title">Not a black box. Not locked in.</h2>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">👁</div>
+        <p class="pillar-title">Visible</p>
+        <p class="pillar-body">See exactly what every AI knows about you. Read it, verify it, export it. No hidden inference.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">✏️</div>
+        <p class="pillar-title">Correctable</p>
+        <p class="pillar-body">Say "that's wrong" and 8mem archives the old belief and writes the new one. You stay in control.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌐</div>
+        <p class="pillar-title">Portable &amp; shareable</p>
+        <p class="pillar-body">Your memory works live inside connected runtimes like OpenClaw and Hermes, and through the local API for any agent that asks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ WORKS WITH ══ -->
+<section id="works-with">
+  <div class="container">
+    <p class="sec-label">Works with</p>
+    <div class="chips">
+      <div class="chip hl"><span class="chip-dot" style="background:#a78bfa"></span>OpenClaw</div>
+      <div class="chip hl"><span class="chip-dot" style="background:#a78bfa"></span>Hermes</div>
+      <div class="chip"><span class="chip-dot" style="background:#1D9E75"></span>Telegram</div>
+      <div class="chip"><span class="chip-dot" style="background:#333355"></span>Any Engram runtime</div>
+    </div>
+    <p class="works-note">8mem is the memory layer that sits beneath runtimes like OpenClaw and Hermes — not instead of them. One memory, every agent.</p>
+  </div>
+</section>
+
+<!-- ══ CAPABILITIES ══ -->
+<section id="capabilities">
+  <div class="container">
+    <p class="sec-label">What you can do</p>
+    <h2 class="sec-title">Built for real workflows.</h2>
+    <p class="sec-sub">8mem ships with a full command set and REST API. Use it from the terminal, Telegram, or wire it directly into any AI runtime.</p>
+    <div class="cap-grid">
+
+      <div class="cap-card">
+        <span class="cap-cmd">/passport</span>
+        <p class="cap-title">Your memory passport</p>
+        <p class="cap-body">See the active memory an agent is using right now, including saved context and trust checks.</p>
+        <div class="cap-example">
+          <div class="cx">8mem /passport</div>
+          <div class="co">→ memory status</div>
+          <div class="co">→ saved memories and corrections</div>
+        </div>
+      </div>
+
+      <div class="cap-card">
+        <span class="cap-cmd">/compare</span>
+        <p class="cap-title">Generic vs memory-aware output</p>
+        <p class="cap-body">Compare what an agent says without memory against what it can do with 8mem context attached.</p>
+        <div class="cap-example">
+          <div class="cx">8mem /compare investor update</div>
+          <div class="co">→ without memory</div>
+          <div class="co">→ with 8mem</div>
+        </div>
+      </div>
+
+      <div class="cap-card">
+        <span class="cap-cmd">8mem correct</span>
+        <p class="cap-title">Fix what's wrong, keep the history</p>
+        <p class="cap-body">Tell 8mem something is incorrect. It archives the old belief with a timestamp and writes the new one. Nothing is silently deleted.</p>
+        <div class="cap-example">
+          <div class="cx">You: "I moved to London, not Berlin"</div>
+          <div class="co">→ Berlin archived (was: 94%)</div>
+          <div class="co">→ London saved (now: 99%)</div>
+        </div>
+      </div>
+
+      <div class="cap-card">
+        <span class="cap-cmd">8mem forget</span>
+        <p class="cap-title">Remove anything, on demand</p>
+        <p class="cap-body">You are always in control. Tell 8mem to forget a belief and it is removed from active memory — you stay the source of truth.</p>
+        <div class="cap-example">
+          <div class="cx">You: "forget my dietary prefs"</div>
+          <div class="co">→ 2 beliefs removed</div>
+          <div class="co">→ audit entry created</div>
+        </div>
+      </div>
+
+      <div class="cap-card">
+        <span class="cap-cmd">GET /v1/context</span>
+        <p class="cap-title">Runtime injection API</p>
+        <p class="cap-body">Any AI runtime calls one endpoint and receives your full context as a structured envelope — ready to inject into any system prompt.</p>
+        <div class="cap-example">
+          <div class="cx">curl /v1/context</div>
+          <div class="co">→ identity, beliefs, history</div>
+          <div class="co">→ system_prompt_injection ready</div>
+        </div>
+      </div>
+
+      <div class="cap-card">
+        <span class="cap-cmd">8mem doctor</span>
+        <p class="cap-title">Health check in one command</p>
+        <p class="cap-body">Verify every component — memory server, context API, agent hooks, runtime connections — with a single command. Green means ready.</p>
+        <div class="cap-example">
+          <div class="cx">8mem doctor</div>
+          <div class="co">✓ memory server running</div>
+          <div class="co">✓ all hooks connected</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ OPEN SOURCE ══ -->
+<section id="open-source">
+  <div class="container">
+    <div class="oss-box">
+      <div class="oss-left">
+        <h2>Fully open source.</h2>
+        <p>Read the code, fork it, build on it. 8mem is built in the open so you can trust what's running on your machine. No telemetry, no hidden cloud calls — memory stays local.</p>
+      </div>
+      <div class="oss-right">
+        <a href="https://github.com/tempomesh/8mem-clean" target="_blank" rel="noopener" class="github-btn">
+          <svg class="gh-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          View on GitHub
+        </a>
+        <img src="https://img.shields.io/github/stars/tempomesh/8mem-clean?style=social" alt="GitHub stars" style="border-radius:4px;opacity:0.8" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <a href="/" class="footer-logo">
+    <img src="logo.svg" alt="8mem" style="height:28px;width:auto;image-rendering:pixelated;opacity:0.75;" />
+  </a>
+  <div class="footer-links">
+    <a href="https://github.com/tempomesh/8mem-clean" target="_blank" rel="noopener">GitHub</a>
+    <a href="/app/install/">Install guide</a>
+        <a href="https://pypi.org/project/8mem/" target="_blank" rel="noopener">PyPI</a>
+  </div>
+  <p class="footer-tagline">local-first agent memory · open source</p>
+</footer>
+
+<script>
+  // ── CONSTELLATION CANVAS ──
+  (function() {
+    const canvas = document.getElementById('constellation');
+    const ctx    = canvas.getContext('2d');
+    let W, H, nodes;
+
+    function resize() {
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+
+    function makeNodes(n) {
+      return Array.from({length: n}, () => ({
+        x:  Math.random() * W,
+        y:  Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        r:  Math.random() * 1.8 + 0.8,
+        hue: Math.random() < 0.6 ? 195 : 260  // cyan or purple
+      }));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      // Move
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < 0 || n.x > W) n.vx *= -1;
+        if (n.y < 0 || n.y > H) n.vy *= -1;
+      }
+
+      // Lines
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const d  = Math.sqrt(dx*dx + dy*dy);
+          if (d < 140) {
+            const alpha = (1 - d / 140) * 0.25;
+            ctx.strokeStyle = `rgba(0,180,220,${alpha})`;
+            ctx.lineWidth   = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Dots
+      for (const n of nodes) {
+        const alpha = n.hue === 195 ? 0.65 : 0.45;
+        ctx.fillStyle = `hsla(${n.hue},80%,65%,${alpha})`;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    resize();
+    nodes = makeNodes(55);
+    draw();
+    window.addEventListener('resize', () => { resize(); nodes = makeNodes(55); });
+  })();
+
+  // ── COPY INSTALL COMMAND ──
+  function copyInstall(btn) {
+    const cmd = 'curl -fsSL https://8mem.com/install.sh | bash';
+    navigator.clipboard.writeText(cmd).then(() => {
+      btn.textContent = 'Copied!';
+      btn.style.color = '#00d4ff';
+      setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+    });
+  }
+</script>
 </body>
-
 </html>

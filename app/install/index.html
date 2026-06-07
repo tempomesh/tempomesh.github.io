@@ -3,27 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>8mem Private Beta Install</title>
+  <title>Install 8mem</title>
+  <meta name="description" content="Install 8mem: local-first agent memory for browser UI, Telegram, OpenClaw, Hermes, and local AI workflows.">
   <link rel="stylesheet" href="../../styles.css">
   <style>
     :root{--line:rgba(255,255,255,.16);--gold:#f2c46d;--muted:#b9c5d8}
     .install-shell{max-width:1080px;margin:0 auto;padding:34px}
     .install-hero{padding:34px;border-radius:28px;background:linear-gradient(135deg,rgba(242,196,109,.12),rgba(70,214,168,.08) 48%,rgba(122,162,255,.08)),rgba(255,255,255,.035);border:1px solid var(--line)}
-    .install-hero h1{font-size:46px;line-height:1.02;margin:12px 0 14px;max-width:780px}
-    .install-hero p{font-size:18px;line-height:1.55;color:#cbd7ea;max-width:820px}
+    .install-hero h1{font-size:46px;line-height:1.02;margin:12px 0 14px;max-width:800px}
+    .install-hero p{font-size:18px;line-height:1.55;color:#cbd7ea;max-width:850px}
     .install-hero .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
     .install-hero .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:12px 18px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#f8fbff;text-decoration:none;font-weight:800;letter-spacing:.01em}
     .install-hero .btn.primary{background:#f2c46d;color:#10141c;border-color:#f2c46d}
-    .install-hero .btn:hover{filter:brightness(1.08)}
     .install-shell a{color:#7ee7ff;text-decoration-thickness:2px;text-underline-offset:4px}
     .command{position:relative;margin:14px 0;padding:18px 20px;border-radius:18px;background:#050b16;border:1px solid rgba(242,196,109,.22);font:15px/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#f7f1dd;white-space:pre-wrap;overflow:auto}
     .step-number{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:rgba(242,196,109,.14);color:var(--gold);font-weight:900;margin-right:10px}
     .step-title{display:flex;align-items:center;margin-bottom:10px}
     .step-title h2{font-size:22px;margin:0}
-    .warning{border-color:rgba(255,107,107,.32);background:rgba(255,107,107,.08)}
-    .success{border-color:rgba(70,214,168,.26);background:rgba(70,214,168,.06)}
-    .muted-link{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
     .checklist{margin:12px 0 0;padding-left:20px;color:#cbd7ea;line-height:1.65}
     .checklist strong{color:#fff}
     .choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
@@ -37,216 +33,175 @@
 <body>
   <main class="install-shell">
     <section class="install-hero">
-      <div class="badge gold">Private beta</div>
+      <div class="badge green">Open source</div>
       <h1>Install 8mem on your machine.</h1>
-      <p>This page is for invited testers with approved access to the private 8mem GitHub repo. It contains no passwords, tokens, API keys, or deploy secrets.</p>
+      <p>Agent memory your AI can finally keep. Visible. Correctable. Portable. Shared. Start with the browser UI, add Telegram when your bot/webhook is ready, and connect OpenClaw or Hermes later if you use them.</p>
       <div class="actions">
-        <a class="btn primary" href="#install">Start install</a>
+        <a class="btn primary" href="#quick-install">Quick install</a>
+        <a class="btn" href="#setup-choices">Setup choices</a>
         <a class="btn" href="#troubleshooting">Troubleshooting</a>
       </div>
     </section>
 
     <div class="grid cols-2" style="margin-top:22px">
-      <section class="card warning">
-        <div class="badge red">Access required</div>
-        <h3>Before you start</h3>
-        <p>You need GitHub access to <strong>tempomesh/8mem</strong>. If you are not invited to the private repo, the installer will fail safely before cloning.</p>
+      <section class="card">
+        <div class="badge blue">Option A</div>
+        <h3>Install with curl</h3>
+        <p>Best for Raspberry Pi, Linux boxes, and quick local installs. It creates a private 8mem runtime under <strong>~/.8mem</strong>.</p>
       </section>
-      <section class="card success">
-        <div class="badge green">Safe by design</div>
-        <h3>No secrets on this page</h3>
-        <p>Do not paste GitHub tokens, Telegram bot tokens, passwords, or API keys into any shared chat. Authenticate locally on your own machine.</p>
+      <section class="card">
+        <div class="badge gold">Option B</div>
+        <h3>Install with pipx</h3>
+        <p>Best for users who already use Python CLI tools. It installs the public PyPI package and keeps it isolated.</p>
       </section>
     </div>
 
     <section class="card" style="margin-top:22px">
       <div class="header">
         <div>
-          <div class="kicker">Tester checklist</div>
-          <h3>What you need before running this</h3>
+          <div class="kicker">Before you start</div>
+          <h3>What you need</h3>
         </div>
-        <span class="badge blue">5 minutes</span>
+        <span class="badge blue">2-10 minutes</span>
       </div>
       <ul class="checklist">
-        <li><strong>Operating system:</strong> macOS or Linux recommended for this private beta. Windows users should use WSL2.</li>
-        <li><strong>GitHub:</strong> you must have access to the private <strong>tempomesh/8mem</strong> repo.</li>
-        <li><strong>Terminal tools:</strong> <strong>git</strong>, <strong>python3</strong>, and preferably <strong>gh</strong> GitHub CLI.</li>
-        <li><strong>Telegram:</strong> optional. You can skip Telegram during setup and add it later.</li>
-        <li><strong>Ollama/local LLM:</strong> optional. Install later if <strong>8mem doctor</strong> says the LLM backend is missing.</li>
+        <li><strong>Python:</strong> Python 3.10+ installed.</li>
+        <li><strong>Browser UI:</strong> no Telegram, OpenClaw, or Hermes required.</li>
+        <li><strong>Local model chat:</strong> optional Ollama install. Use any model you have pulled; examples like <strong>qwen3:1.7b</strong> are placeholders, not requirements.</li>
+        <li><strong>Telegram:</strong> optional BotFather token plus a public HTTPS webhook URL such as ngrok, Tailscale Funnel, or your own domain.</li>
+        <li><strong>OpenClaw/Hermes:</strong> optional. If you install them after 8mem, rerun the relevant 8mem setup command later.</li>
       </ul>
     </section>
 
-    <section id="install" class="grid" style="margin-top:22px">
+    <section id="quick-install" class="grid" style="margin-top:22px">
       <div class="card">
-        <div class="step-title"><span class="step-number">1</span><h2>Install with one command</h2></div>
-        <p>After GitHub is authenticated on this machine, run:</p>
+        <div class="step-title"><span class="step-number">1</span><h2>Curl install</h2></div>
         <div class="command">curl -fsSL https://8mem.com/install.sh | bash</div>
-        <p class="small">This script contains no secrets. It checks access to the private repo, clones or updates the source under <strong>~/.8mem/src/8mem</strong>, then runs the normal local installer.</p>
+        <p class="small">The script installs the current public wheel, initializes <strong>~/.8mem</strong>, runs doctor, and prints exact next steps. If setup is incomplete, it should say what is missing instead of pretending everything is ready.</p>
       </div>
 
       <div class="card">
-        <div class="step-title"><span class="step-number">2</span><h2>Authenticate GitHub if needed</h2></div>
-        <p>If your machine is not already authenticated with GitHub, run:</p>
-        <div class="command">gh auth login
-gh auth setup-git</div>
-        <p class="small">Then rerun the one-line installer. If <strong>gh</strong> is not installed, use GitHub's official CLI installer for your operating system. Do not share tokens with anyone.</p>
+        <div class="step-title"><span class="step-number">2</span><h2>Pipx install</h2></div>
+        <div class="command">python3 -m pip install --user pipx
+python3 -m pipx ensurepath
+pipx install 8mem
+8mem setup</div>
+        <p class="small">Open a new terminal after <strong>pipx ensurepath</strong> if your shell cannot find <strong>8mem</strong>.</p>
       </div>
 
-      <div class="card">
-        <div class="step-title"><span class="step-number">3</span><h2>Manual fallback</h2></div>
-        <p>Use this only if the one-line installer is blocked by your shell or network.</p>
-        <div class="command">git clone https://github.com/tempomesh/8mem.git
-cd 8mem
-bash ./install.sh</div>
-      </div>
-
-      <div class="card">
-        <div class="step-title"><span class="step-number">4</span><h2>Answer setup choices</h2></div>
-        <p class="small">During setup, choose how you want to test first. If you are unsure, choose <strong>1</strong>.</p>
-        <div class="command">How do you want to use 8mem first?
-1. Browser UI only (recommended first)
-2. Telegram bot
-3. Both browser UI and Telegram
-4. Skip optional setup
-Choose [1]:</div>
+      <div id="setup-choices" class="card">
+        <div class="step-title"><span class="step-number">3</span><h2>Choose how to use 8mem first</h2></div>
+        <div class="command">8mem setup</div>
         <div class="choice-grid">
-          <div class="choice"><strong>1. Browser UI only</strong><span>Best first QA path. No Telegram token needed. You can use the dashboard and local Test Chat.</span></div>
-          <div class="choice"><strong>2. Telegram bot</strong><span>Use this only if you already have a BotFather token. A public HTTPS URL is needed for live webhooks. You can add it later with <strong>8mem setup --mode telegram</strong>.</span></div>
-          <div class="choice"><strong>3. Both</strong><span>Sets up local browser UI and Telegram in one pass. Use this for full channel testing.</span></div>
-          <div class="choice"><strong>4. Skip optional setup</strong><span>Creates local runtime files only. Run <strong>8mem setup --mode telegram</strong> later to add Telegram, or <strong>8mem setup</strong> to revisit all choices.</span></div>
+          <div class="choice"><strong>Browser UI only</strong><span>Recommended first. Save memory, inspect memory, import conversations, and test local memory without Telegram.</span></div>
+          <div class="choice"><strong>Telegram bot</strong><span>Use this when you already have a BotFather token and a public HTTPS webhook URL.</span></div>
+          <div class="choice"><strong>Browser UI + Telegram</strong><span>Full product path: local dashboard plus Telegram commands like /passport and /compare.</span></div>
+          <div class="choice"><strong>Agent integrations</strong><span>Add OpenClaw or Hermes only if those runtimes are installed on the same machine.</span></div>
         </div>
-        <p class="small"><strong>Ollama prompt:</strong> choose <strong>N</strong> unless Ollama is already installed. If you choose <strong>Y</strong>, press Enter to accept <strong>http://localhost:11434</strong> and the default model, or type a real value like <strong>qwen2.5:14b</strong>.</p>
-        <p class="small"><strong>Telegram prompt:</strong> paste a real BotFather token only when choosing option 2 or 3. Press Enter to generate the webhook secret. The public HTTPS URL is only needed when Telegram must reach this local 8mem server. Examples: <strong>https://your-ngrok-domain.ngrok-free.app</strong>, <strong>https://your-device.tailnet.ts.net</strong>, or your own HTTPS domain. Press Enter to skip it and add it later with <strong>8mem setup --mode telegram</strong>.</p>
-        <p class="small"><strong>Expected result:</strong> the installer creates a local virtual environment, installs the <strong>8mem</strong> command, and prints next steps. It should not ask you to paste secrets into this webpage.</p>
       </div>
 
       <div class="card">
-        <div class="step-title"><span class="step-number">5</span><h2>Verify the install</h2></div>
-        <div class="command">export PATH="$HOME/.local/bin:$PATH"
-8mem doctor</div>
-        <p class="small"><strong>Expected result:</strong> Doctor should show core checks as passing. Telegram and Ollama may appear as optional or needing setup depending on what you chose.</p>
-        <p class="small">If your shell still says <strong>8mem: command not found</strong>, use <strong>~/.8mem/venv/bin/8mem doctor</strong>.</p>
-      </div>
-
-      <div class="card">
-        <div class="step-title"><span class="step-number">6</span><h2>Start 8mem</h2></div>
-        <div class="command">8mem start
+        <div class="step-title"><span class="step-number">4</span><h2>Start and open</h2></div>
+        <div class="command">8mem doctor
+8mem start
 8mem status</div>
-        <p class="small">Then open <a class="muted-link" href="http://127.0.0.1:8787">http://127.0.0.1:8787</a> on the same machine for the dashboard.</p>
-        <p class="small">To chat in the browser UI, open <a class="muted-link" href="http://127.0.0.1:8787/chat">http://127.0.0.1:8787/chat</a>. Test Chat needs Ollama running; the rest of the dashboard works without Telegram.</p>
-        <p class="small"><strong>8mem start</strong> runs in the background, writes <strong>~/.8mem/8mem.pid</strong>, and logs to <strong>~/.8mem/8mem.log</strong>. Stop it with <strong>8mem stop</strong>.</p>
-        <p class="small">If you want old foreground behavior for debugging, run <strong>8mem start --foreground</strong> or <strong>8mem serve --host 127.0.0.1 --port 8787</strong>.</p>
+        <p class="small">Then open <a href="http://127.0.0.1:8787">http://127.0.0.1:8787</a> on the same machine.</p>
       </div>
+    </section>
 
+    <section class="grid cols-2" style="margin-top:22px">
       <div class="card">
-        <div class="step-title"><span class="step-number">7</span><h2>Test the local API</h2></div>
-        <div class="command">API_KEY="$(grep '^EIGHTMEM_LOCAL_API_KEY=' ~/.8mem/.env | cut -d= -f2- | tr -d '"')"
+        <div class="badge green">Browser UI</div>
+        <h3>What works without Telegram</h3>
+        <ul class="checklist">
+          <li>Save a fact from Start Here.</li>
+          <li>Review what AI knows.</li>
+          <li>Inspect and edit memory sections.</li>
+          <li>Import conversations or use sample data.</li>
+          <li>Test local memory if Ollama is installed.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="badge gold">Telegram</div>
+        <h3>What Telegram needs</h3>
+        <ul class="checklist">
+          <li>BotFather token.</li>
+          <li>Public HTTPS webhook URL that forwards to your local 8mem server.</li>
+          <li>Run <strong>8mem setup --mode telegram</strong> after the public URL is ready.</li>
+          <li>Test with <strong>/start</strong>, <strong>/passport</strong>, and <strong>/compare topic</strong>.</li>
+        </ul>
+      </div>
+    </section>
 
-curl -s http://127.0.0.1:8787/readyz
-curl -s http://127.0.0.1:8787/v1/context \
-  -H "Authorization: Bearer $API_KEY"</div>
-        <p class="small">Setup writes your local API key to `~/.8mem/.env`. Keep that file private and do not paste the key into shared chats.</p>
-        <p class="small"><strong>Expected result:</strong> <strong>/readyz</strong> returns JSON with <strong>"ok": true</strong>. <strong>/v1/context</strong> returns Engram JSON with <strong>engram_version</strong>, <strong>identity</strong>, and <strong>system_prompt_injection</strong>.</p>
+    <section class="grid cols-2" style="margin-top:22px">
+      <div class="card">
+        <div class="badge blue">Later: OpenClaw</div>
+        <h3>If OpenClaw is installed after 8mem</h3>
+        <div class="command">8mem setup --mode openclaw</div>
+        <p class="small">This adds the 8mem memory hook/config for OpenClaw. It does not uninstall or replace OpenClaw.</p>
+      </div>
+      <div class="card">
+        <div class="badge blue">Later: Hermes</div>
+        <h3>If Hermes is installed after 8mem</h3>
+        <div class="command">8mem setup --mode hermes</div>
+        <p class="small">This adds the 8mem memory integration for Hermes. It does not uninstall or replace Hermes.</p>
       </div>
     </section>
 
     <section id="troubleshooting" class="grid cols-2" style="margin-top:22px">
       <div class="card">
-        <div class="badge blue">If clone fails</div>
-        <h3>Check repo access</h3>
-        <div class="command">gh auth status
-gh auth setup-git</div>
-        <p class="small">The repo is private. Browser access alone may not mean your terminal Git is authenticated.</p>
-      </div>
-      <div class="card">
-        <div class="badge blue">If command not found</div>
-        <h3>Use the installed binary directly</h3>
+        <div class="badge gold">Command not found</div>
+        <h3>Fix your PATH</h3>
         <div class="command">export PATH="$HOME/.local/bin:$PATH"
 8mem doctor
 
-# If that still fails:
-~/.8mem/venv/bin/8mem doctor
-~/.8mem/venv/bin/8mem start
-~/.8mem/venv/bin/8mem status</div>
+# Curl install fallback:
+~/.8mem/venv/bin/8mem doctor</div>
       </div>
       <div class="card">
-        <div class="badge blue">If API returns 401</div>
-        <h3>Reload the local key</h3>
-        <div class="command">API_KEY="$(grep '^EIGHTMEM_LOCAL_API_KEY=' ~/.8mem/.env | cut -d= -f2- | tr -d '"')"
-test -n "$API_KEY" &amp;&amp; echo "API key loaded"</div>
-        <p class="small">Do not print or share the key. Use it only in your own terminal for local testing.</p>
+        <div class="badge gold">Wrong Ollama model</div>
+        <h3>Choose a model you actually have</h3>
+        <div class="command">ollama list
+8mem setup --llm-model YOUR_MODEL_NAME</div>
+        <p class="small">Model names in docs are examples only. 8mem should work with the local model you choose.</p>
       </div>
       <div class="card">
-        <div class="badge gold">If Telegram is not ready</div>
-        <h3>Skip it first</h3>
-        <p>8mem can install and run locally without Telegram. Configure Telegram later with:</p>
-        <div class="command">8mem setup --mode telegram</div>
+        <div class="badge gold">Telegram webhook missing</div>
+        <h3>Add it after tunnel setup</h3>
+        <div class="command">8mem setup --mode telegram
+8mem doctor</div>
       </div>
       <div class="card">
-        <div class="badge gold">If Ollama is missing</div>
-        <h3>Install local model support later</h3>
-        <div class="command">curl -fsSL https://ollama.com/install.sh | sh
-ollama pull qwen2.5:14b</div>
-      </div>
-      <div class="card">
-        <div class="badge gold">If you need to update</div>
-        <h3>Pull latest and reinstall</h3>
-        <div class="command">cd 8mem
-git pull
-bash ./install.sh
-8mem doctor
-systemctl --user restart 8mem.service
-8mem status
+        <div class="badge gold">Clean uninstall</div>
+        <h3>Remove package, keep or delete memory</h3>
+        <div class="command">8mem stop
+pipx uninstall 8mem
 
-# If you are not using systemd:
-8mem stop &amp;&amp; 8mem start</div>
-        <p class="small"><strong>Important:</strong> <strong>git pull</strong> updates the source checkout, but installed testers run the package inside <strong>~/.8mem/venv</strong>. Always rerun <strong>bash ./install.sh</strong> after pulling new code.</p>
+# Optional only if you want to delete local memory:
+rm -rf ~/.8mem</div>
+        <p class="small">Apps normally keep user data unless the user explicitly deletes it.</p>
       </div>
     </section>
 
     <section class="card" style="margin-top:22px">
       <div class="header">
         <div>
-          <div class="kicker">Success criteria</div>
-          <h3>When to mark the install as PASS</h3>
+          <div class="kicker">Verify</div>
+          <h3>When install is ready</h3>
         </div>
         <span class="badge green">PASS</span>
       </div>
       <ul class="checklist">
-        <li><strong>Install:</strong> <strong>bash ./install.sh</strong> completes without a crash.</li>
-        <li><strong>Doctor:</strong> <strong>8mem doctor</strong> clearly reports the core install state.</li>
-        <li><strong>Server:</strong> <strong>8mem start</strong> starts the background server and <strong>8mem status</strong> reports it as running.</li>
-        <li><strong>Health:</strong> <strong>curl /readyz</strong> returns <strong>"ok": true</strong>.</li>
-        <li><strong>Context:</strong> <strong>curl /v1/context</strong> returns valid JSON, not 401/404/500.</li>
+        <li><strong>8mem doctor</strong> reports core checks as pass.</li>
+        <li><strong>8mem start</strong> starts the server.</li>
+        <li><strong>http://127.0.0.1:8787</strong> opens the local dashboard.</li>
+        <li>Browser-only users can save and inspect memory locally.</li>
+        <li>Telegram users configured a real bot token and webhook URL.</li>
       </ul>
     </section>
 
-    <section class="card" style="margin-top:22px">
-      <div class="header">
-        <div>
-          <div class="kicker">Tester report</div>
-          <h3>What to send back</h3>
-        </div>
-        <span class="badge green">QA</span>
-      </div>
-      <div class="command">Install result: PASS/FAIL
-OS:
-Machine:
-Python:
-Git:
-GitHub auth:
-Install command used:
-8mem doctor summary:
-/readyz result:
-/v1/context summary:
-Telegram configured: yes/no/skipped
-Ollama configured: yes/no/skipped
-Top issue:
-Screenshot or terminal error, if any:</div>
-    </section>
-
     <div class="install-footer">
-      8mem private beta install guide. No secrets are stored or displayed on this page.
+      8mem public install guide. Keep local API keys, Telegram tokens, and webhook secrets private.
     </div>
   </main>
 </body>
