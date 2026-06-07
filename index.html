@@ -185,6 +185,10 @@
       margin-bottom: 18px;
     }
     .hero-h1 .white { color: #fff; }
+    .hero-h1 .line {
+      display: inline-block;
+      white-space: nowrap;
+    }
     .hero-h1 .grad {
       background: linear-gradient(90deg, var(--cyan) 0%, var(--purple) 100%);
       -webkit-background-clip: text;
@@ -885,7 +889,7 @@
     @media (max-width: 720px) {
       .hero-inner        { grid-template-columns: 1fr; }
       .octo-stage        { display: none; }
-      .hero-h1           { font-size: 36px; }
+      .hero-h1           { font-size: clamp(34px, 10.5vw, 48px); letter-spacing: -1.5px; }
       .problem-grid,
       .how-grid,
       .pillars,
@@ -923,8 +927,9 @@
     <div class="hero-inner">
       <div>
         <h1 class="hero-h1">
-          <span class="white">Agent memory your AI</span><br>
-          <span class="grad">can finally keep.</span>
+          <span class="white line">Agent memory</span><br>
+          <span class="white line">your AI can</span><br>
+          <span class="grad line">finally keep.</span>
         </h1>
         <p class="hero-pillartags">
           <span>Visible</span><span class="sep">·</span>
