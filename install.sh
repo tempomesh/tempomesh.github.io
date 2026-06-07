@@ -11,8 +11,8 @@ fi
 set -euo pipefail
 
 APP_NAME="8mem"
-WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.8-py3-none-any.whl}"
-WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-d52b6a2fc0b0800474c43d4392d8847667d2dc9199ff3a5eb85ac906cde69d20}"
+WHEEL_URL="${EIGHTMEM_WHEEL_URL:-https://8mem.com/app/install/8mem-0.1.9-py3-none-any.whl}"
+WHEEL_SHA256="${EIGHTMEM_WHEEL_SHA256:-0b69ac4e78cd98987e34f63e01a06279b3b71795193b046d00622d4148670b9c}"
 RUNTIME_HOME="${EIGHTMEM_HOME:-$HOME/.8mem}"
 VENV_DIR="${EIGHTMEM_VENV:-$HOME/.8mem/venv}"
 BIN_DIR="${EIGHTMEM_BIN_DIR:-$HOME/.local/bin}"
@@ -27,6 +27,32 @@ HERMES_WIRE_FAILED="0"
 TELEGRAM_CONFIGURED="0"
 SERVER_STARTED="0"
 SERVER_START_FAILED="0"
+
+print_logo() {
+  local gold=""
+  local blue=""
+  local gray=""
+  local reset=""
+
+  if [ -t 1 ]; then
+    gold="\033[38;2;240;200;109m"
+    blue="\033[38;2;127;168;255m"
+    gray="\033[38;5;153m"
+    reset="\033[0m"
+  fi
+
+  printf "${gold}         ▄██████▖${reset}\n"
+  printf "${gold}       ▄█████████▙▖${reset}\n"
+  printf "${gold}      █████████████▌${reset}\n"
+  printf "${gold}      ██ █▀████▜▌▐█▌${reset}      ${blue}___   __  __   ___  __  __${reset}\n"
+  printf "${gold}      █████████████▌${reset}     ${blue}( _ ) |  \\\\/  | |  _||  \\\\/  |${reset}\n"
+  printf "${gold}       ▀█████████▛▘${reset}      ${blue}/ _ \\\\ | |\\\\/| | |  _|| |\\\\/| |${reset}\n"
+  printf "${gold}     ▗█████████████▙▖${reset}    ${blue}\\\\___/ |_|  |_| |___||_|  |_|${reset}\n"
+  printf "${gold}  ▐█▌▐█ ██ ██ █▛▐█▌▐█▌▐█▘${reset}\n"
+  printf "${gold}  ▐█▌▐█ ██ ██ █▛▐█▌▐█▌▐█▘${reset}       ${gray}8 arms, 8 mem, persistent memory${reset}\n"
+  printf "${gold}  ▝▜▌▝▜ ▀█ ▀█ ▀▛▝▜▌▝▜▌▝▜▘${reset}\n"
+  printf "\n"
+}
 
 info() {
   printf '%s\n' "$*"
@@ -325,7 +351,13 @@ print_next_steps() {
   info ""
   info "If Ollama is not installed yet:"
   info "  curl -fsSL https://ollama.com/install.sh | sh"
-  info "  ollama pull ${local_model:-qwen3:1.7b}"
+  if [ -n "${local_model:-}" ]; then
+    info "  ollama pull $local_model"
+  else
+    info "  ollama list"
+    info "  8mem setup --llm-model <your-installed-ollama-model>"
+    info "  Example: 8mem setup --llm-model qwen3:1.7b"
+  fi
   info ""
   if [ "$TELEGRAM_CONFIGURED" != "1" ]; then
     info "For Telegram, rerun setup when you have your BotFather token:"
@@ -384,6 +416,7 @@ print_next_steps() {
 }
 
 main() {
+  print_logo
   info "Installing 8mem public beta"
   require_supported_platform
   require_python
