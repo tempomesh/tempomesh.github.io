@@ -1304,13 +1304,12 @@
       <p class="sec-label" style="justify-content:center;margin-bottom:14px;">Product updates</p>
       <h2>Get 8mem updates.</h2>
       <p>Product updates, setup fixes, and new agent integrations. No spam.</p>
-      <form class="email-form" action="https://formsubmit.co/ajax/testmemory.2025@gmail.com" method="post">
+      <form class="email-form" action="https://api.web3forms.com/submit" method="post">
+        <input type="hidden" name="access_key" value="e51c5749-85cc-43d2-ba03-521800eb4226" />
+        <input type="hidden" name="subject" value="New 8mem update signup" />
+        <input type="hidden" name="from_name" value="8mem.com" />
         <input type="email" name="email" placeholder="you@email.com" aria-label="Email address" required />
-        <input type="hidden" name="_subject" value="New 8mem update signup" />
-        <input type="hidden" name="_template" value="table" />
-        <input type="hidden" name="_captcha" value="false" />
-        <input type="hidden" name="_next" value="https://8mem.com/?signup=success#stay-connected" />
-        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" />
+        <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none" />
         <button type="submit">Get updates →</button>
       </form>
       <p class="email-status" id="email-status" aria-live="polite"></p>
